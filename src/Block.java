@@ -24,6 +24,7 @@ public class Block{
         //This would be the base case, the color of the block can't go below ths combination or RGB
         g.setColor(Color.BLACK);
         g.drawRect(X, Y, Width, Width);
+        //TEst2
     }
 
 }
