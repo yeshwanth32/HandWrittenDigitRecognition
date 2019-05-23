@@ -274,6 +274,7 @@ public class Driver {
 //                    JComboBox c1 = new JComboBox(s1);
 //                    c1.setBounds(150,160,100,20);
 //                    SettingsFrame2.add(c1);
+                    // test 2
                     Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
                     Settings1.add(t1);
                     Settings1.add(t2);

@@ -14,5 +14,6 @@ public class NetworkSettings extends JPanel{
         g.setColor(Color.red);
         g.drawString("End with a ',' ", 375, 17);
         g.drawString("Between 0.0 and 1.0", 375, 55);
+        // test 2
     }
 }

@@ -56,6 +56,7 @@ public class ColorPanel extends JPanel{
             System.out.println();
         }
         System.out.println("Console Display end");
+        // Test2
     }
     public void SetMouseOn(boolean on) {MouseOn = on;}
     public void DrawBoxWorkingTest(int x, int y) {
