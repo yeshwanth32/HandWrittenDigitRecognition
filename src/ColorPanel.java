@@ -81,7 +81,6 @@ public class ColorPanel extends JPanel{
                 }
             }
         }
-        System.out.println("Test");
     }
     public void paintComponent(Graphics g) {
         DrawBox(g);

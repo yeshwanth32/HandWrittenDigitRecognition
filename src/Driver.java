@@ -10,10 +10,14 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+
 import java.nio.file.Paths;
 import java.util.List;
 import java.nio.file.Files;
@@ -144,9 +148,6 @@ public class Driver {
         t.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                /*NetworkMiddle =  StringToArr(t.getText());
-                System.out.println(Arrays.toString(NetworkMiddle));
-                Action = 5;*/
                 WriteInTrainData(P.DrawBoxToCSV(),Integer.parseInt(t.getText()));
                 System.out.println(P.DrawBoxToCSV());
                 Action = 2;
@@ -169,8 +170,6 @@ public class Driver {
         //delay
         boolean switcheroo = true;
         while (true) {
-        	
-        	
             //PrintWriter writer = new PrintWriter("Test.txt", "UTF-8");
             if (Action == 1) {
                 boolean TrainMNIST = true;
@@ -220,14 +219,22 @@ public class Driver {
                     SettingsFrame2.setSize(500,250);
                     SettingsFrame2.setResizable(false);
                     Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
-                    JTextField t1 = new JTextField(26);
+                    JTextField t1 = new JTextField();
                     t1.setBounds(150,5,200,20);
+                    String Temp = "";
+                    for (int i = 0; i < NetworkMiddle.length; i++) {
+                    	Temp += NetworkMiddle[i] + ",";
+                    }
+                    t1.setText(Temp);
                     JTextField t2 = new JTextField();
-                    t2.setBounds(150,45,200,20);
+                    //t2.setBounds(150,45,200,20);
+                    t2.setText(Double.toString(LearningRate));
                     JTextField t3 = new JTextField();
-                    t3.setBounds(150,80,200,20);
+                    //t3.setBounds(150,80,200,20);
+                    t3.setText(Integer.toString(EpochSize));
                     JTextField t4 = new JTextField();
-                    t4.setBounds(150,120,200,20);
+                    //t4.setBounds(150,120,200,20);
+                    t4.setText(Integer.toString(Loops));
                     t1.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent arg0) {
@@ -259,24 +266,29 @@ public class Driver {
                             Loops = Integer.parseInt(t4.getText());
                         }
                     });
-                    SettingsFrame2.add(t1);
-                    SettingsFrame2.add(t2);
-                    SettingsFrame2.add(t3);
-                    SettingsFrame2.add(t4);
-                    String s1[] = { "Test", "Train" };
-                    JComboBox c1 = new JComboBox(s1);
-                    c1.setBounds(150,160,100,20);
-                    SettingsFrame2.add(c1);
+//                    SettingsFrame2.add(t1);
+//                    SettingsFrame2.add(t2);
+//                    SettingsFrame2.add(t3);
+//                    SettingsFrame2.add(t4);
+//                    String s1[] = { "Test", "Train" };
+//                    JComboBox c1 = new JComboBox(s1);
+//                    c1.setBounds(150,160,100,20);
+//                    SettingsFrame2.add(c1);
+                    Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
+                    Settings1.add(t1);
+                    Settings1.add(t2);
+                    Settings1.add(t3);
+                    Settings1.add(t4);
                     SettingsFrame2.addWindowListener(new WindowAdapter() {
                         public void windowClosing(WindowEvent we) {
                             Action = 2;
-                            switcheroo = false;
                         }
                     });
                     SettingsFrame2.getContentPane().add(Settings1);
+                    SettingsFrame2.add(Settings1, BorderLayout.PAGE_START);
                     SettingsFrame2.repaint();
                     SettingsFrame2.setVisible(true);
-                    
+                    switcheroo = false;
                 }
             }
             else if (Action == 8){
