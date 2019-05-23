@@ -33,7 +33,7 @@ public class Driver {
     private static int[] NetworkMiddle;
     private static int EpochSize, Loops;
     private static double LearningRate;
-    private static String location = "C:\\Users\\bommareddyy\\Desktop\\HandWrittenDigitRecognition";
+    public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
     public static void Initializations(ColorPanel P, JFrame myFrame){
         //ExitTrain = false;
         EpochSize = 150;
@@ -162,8 +162,8 @@ public class Driver {
         /*JFrame myFrame2 = new JFrame();
         Initializations(P2,myFrame2);*/
         JFrame SettingsFrame2 = new JFrame();
-        String Location = location + "\\src\\mnist_train.csv";
-        String Location2 = location + "\\src\\mnist_test.csv";
+        String Location = location + "\\mnist_train.csv";
+        String Location2 = location + "\\mnist_test.csv";
         NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
         PopulateTestArray(Location,Location2);
         myFrame.repaint();

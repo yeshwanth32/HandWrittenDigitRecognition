@@ -64,7 +64,7 @@ public class ColorPanel extends JPanel{
             for (int j = 0; j < DrawBoxes[i].length; j++) {
                 if (x >= DrawBoxes[i][j].X && x <= DrawBoxes[i][j].X + DrawBoxes[i][j].Width) {
                     if (y >= DrawBoxes[i][j].Y && y <= DrawBoxes[i][j].Y + DrawBoxes[i][j].Width) {
-                        DrawBoxes[i][j].ShadeColor = 252;
+                        DrawBoxes[i][j].ShadeColor = 255;
                         int Rand = (int)((Math.random()*150) + 10);
                         if (j > 0 && DrawBoxes[i][j-1].ShadeColor >= 0 && (DrawBoxes[i][j-1].ShadeColor + Rand) < 255) {
                             DrawBoxes[i][j-1].ShadeColor += Rand;

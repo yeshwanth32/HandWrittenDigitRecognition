@@ -22,8 +22,8 @@ public class Block{
         //g.setColor(new Color(255- ShadeColor, 255- ShadeColor,255- ShadeColor)); // black
         // use a color pallete, make the user select the color example (12,235,126). 
         //This would be the base case, the color of the block can't go below ths combination or RGB
-        g.setColor(Color.BLACK);
-        g.drawRect(X, Y, Width, Width);
+        g.fillRect(X, Y, Width, Width);
+        
     }
 
 }

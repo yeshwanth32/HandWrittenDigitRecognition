@@ -241,27 +241,33 @@ public class NeuralNetwork {
         return ((j - i) * Math.random()) + i ;
     }
     public boolean ReadNetwork() throws FileNotFoundException, IOException {
-        FileReader fr = new FileReader("Network.txt");
-        BufferedReader br = new BufferedReader(fr);
-        for (int i = 0; i < ValueM.length; i++){
-            int Size = Integer.parseInt(br.readLine());
-            if (ValueM[i].length != Size){return false;}
-        }
-        ValueI = StringToArray(br.readLine());
-        for (int i = 0; i < ValueM.length; i++){
-            ValueM[i] = StringToArray(br.readLine());
-        }
-        ValueO = StringToArray(br.readLine());
-        for (int i = 0; i < BiasesM.length; i++){
-            BiasesM[i] = StringToArray(br.readLine());
-        }
-        for (int i = 0; i < Weights.length; i++){
-            for (int j = 0; j < Weights[i].length; j++){
-                Weights[i][j] = StringToArray(br.readLine());
-            }
-        }
-        System.out.println("Done");
-        return true;
+    	try {
+    		System.out.println(Driver.location +"\\Network.txt");
+	        FileReader fr = new FileReader(Driver.location + "\\Network.txt");
+	        BufferedReader br = new BufferedReader(fr);
+	        for (int i = 0; i < ValueM.length; i++){
+	            int Size = Integer.parseInt(br.readLine());
+	            if (ValueM[i].length != Size){return false;}
+	        }
+	        ValueI = StringToArray(br.readLine());
+	        for (int i = 0; i < ValueM.length; i++){
+	            ValueM[i] = StringToArray(br.readLine());
+	        }
+	        ValueO = StringToArray(br.readLine());
+	        for (int i = 0; i < BiasesM.length; i++){
+	            BiasesM[i] = StringToArray(br.readLine());
+	        }
+	        for (int i = 0; i < Weights.length; i++){
+	            for (int j = 0; j < Weights[i].length; j++){
+	                Weights[i][j] = StringToArray(br.readLine());
+	            }
+	        }
+	        System.out.println("Done");
+	        return true;
+    	}catch (Exception e) {
+    		System.out.println(e.toString());
+    		return false;
+    	}    	
     }
     public double[] StringToArray(String str){
         int counter = 0;
@@ -282,7 +288,7 @@ public class NeuralNetwork {
         return arr;
     }
     public void SaveNetwork() throws IOException {
-        FileWriter fw=new FileWriter("Network.txt");
+        FileWriter fw=new FileWriter(Driver.location +"\\Network.txt");
         for (int i = 0; i < ValueM.length; i++){
             fw.write(ValueM[i].length + "\n");
         }
