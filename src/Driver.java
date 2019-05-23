@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.nio.file.Files;
 import java.util.Random;
 import java.util.Set;
+
 
 public class Driver {
     private static int Action;
@@ -163,7 +165,12 @@ public class Driver {
         String Location2 = location + "\\src\\mnist_test.csv";
         NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
         PopulateTestArray(Location,Location2);
+        myFrame.repaint();
+        //delay
+        boolean switcheroo = true;
         while (true) {
+        	
+        	
             //PrintWriter writer = new PrintWriter("Test.txt", "UTF-8");
             if (Action == 1) {
                 boolean TrainMNIST = true;
@@ -205,52 +212,65 @@ public class Driver {
                 Test.DisplayMiddleSizes();
                 Action = 2;
             }
-            else if (Action == 6 || Action == 7){
+            else if ((Action == 6 || Action == 7)&&switcheroo){
+            	System.out.println("blah");
                 if (!SettingsFrame2.isActive()) {
-                    NetworkSettings Settings1 = new NetworkSettings(1);
+                    NetworkSettings Settings1 = new NetworkSettings();
                     SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
-                    SettingsFrame2.setSize(500,200);
+                    SettingsFrame2.setSize(500,250);
+                    SettingsFrame2.setResizable(false);
                     Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
                     JTextField t1 = new JTextField(26);
-                    
-                    t1.setBounds(15,15,50,10);
-                    JTextField t2 = new JTextField(25);
-                    t2.setBounds(25,55,50,10);
-                    JTextField t3 = new JTextField(16);
-                    t3.setBounds(0,0,10,10);
-                    JTextField t4 = new JTextField(16);
-                    t4.setBounds(15,135,100,10);
+                    t1.setBounds(150,5,200,20);
+                    JTextField t2 = new JTextField();
+                    t2.setBounds(150,45,200,20);
+                    JTextField t3 = new JTextField();
+                    t3.setBounds(150,80,200,20);
+                    JTextField t4 = new JTextField();
+                    t4.setBounds(150,120,200,20);
                     t1.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent arg0) {
                             System.out.println(t1.getText());
+                            NetworkMiddle = StringToArr(t1.getText());
+                            Action = 5;
+                            SettingsFrame2.dispatchEvent(new WindowEvent(SettingsFrame2, WindowEvent.WINDOW_CLOSING));
+                            
                         }
                     });
                     t2.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t1.getText());
+                            System.out.println(t2.getText());
+                            LearningRate = Double.parseDouble(t2.getText());
                         }
                     });
                     t3.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t1.getText());
+                            System.out.println(t3.getText());
+                            EpochSize = Integer.parseInt(t3.getText());
                         }
                     });
                     t4.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t1.getText());
+                            System.out.println(t4.getText());
+                            Loops = Integer.parseInt(t4.getText());
                         }
                     });
-                    Settings1.add(t1);
-                    Settings1.add(t2);
-                    Settings1.add(t3);
-                    Settings1.add(t4);
+                    SettingsFrame2.add(t1);
+                    SettingsFrame2.add(t2);
+                    SettingsFrame2.add(t3);
+                    SettingsFrame2.add(t4);
+                    String s1[] = { "Test", "Train" };
+                    JComboBox c1 = new JComboBox(s1);
+                    c1.setBounds(150,160,100,20);
+                    SettingsFrame2.add(c1);
                     SettingsFrame2.addWindowListener(new WindowAdapter() {
                         public void windowClosing(WindowEvent we) {
                             Action = 2;
+                            switcheroo = false;
                         }
                     });
                     SettingsFrame2.getContentPane().add(Settings1);
@@ -263,7 +283,7 @@ public class Driver {
                 TestNetwork(Test);
                 Action = 2;
             }
-            myFrame.repaint();
+            myFrame.repaint(); 
         }
 
     }
