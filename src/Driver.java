@@ -220,7 +220,7 @@ public class Driver {
                 Test.DisplayMiddleSizes();
                 Action = 2;
             }
-            else if ((Action == 6 || Action == 7)){
+            else if ((Action ==7 )){
                 if (!SettingsFrame2.isActive()) {
                 	IntitializeSettingsFrame(SettingsFrame2, myFrame, P);
                 	System.out.println("blah");
