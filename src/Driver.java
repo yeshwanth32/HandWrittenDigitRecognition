@@ -3,6 +3,8 @@ import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -11,12 +13,16 @@ import java.util.Arrays;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -211,7 +217,7 @@ public class Driver {
                 Test.DisplayMiddleSizes();
                 Action = 2;
             }
-            else if ((Action == 6 || Action == 7)&&switcheroo){
+            else if ((Action == 6 || Action == 7)){
             	System.out.println("blah");
                 if (!SettingsFrame2.isActive()) {
                     NetworkSettings Settings1 = new NetworkSettings();
@@ -227,13 +233,10 @@ public class Driver {
                     }
                     t1.setText(Temp);
                     JTextField t2 = new JTextField();
-                    //t2.setBounds(150,45,200,20);
                     t2.setText(Double.toString(LearningRate));
                     JTextField t3 = new JTextField();
-                    //t3.setBounds(150,80,200,20);
                     t3.setText(Integer.toString(EpochSize));
                     JTextField t4 = new JTextField();
-                    //t4.setBounds(150,120,200,20);
                     t4.setText(Integer.toString(Loops));
                     t1.addActionListener(new ActionListener() {
                         @Override
@@ -266,20 +269,30 @@ public class Driver {
                             Loops = Integer.parseInt(t4.getText());
                         }
                     });
-//                    SettingsFrame2.add(t1);
-//                    SettingsFrame2.add(t2);
-//                    SettingsFrame2.add(t3);
-//                    SettingsFrame2.add(t4);
-//                    String s1[] = { "Test", "Train" };
-//                    JComboBox c1 = new JComboBox(s1);
-//                    c1.setBounds(150,160,100,20);
-//                    SettingsFrame2.add(c1);
-                    // test 2
                     Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
+                    TitledBorder title = null;
+                    Border blackline = BorderFactory.createLineBorder(Color.black);
+                    IntitializeTextBox(title, "Middle Layers (end with a ',')", blackline, t1);
+                    IntitializeTextBox(title, "Learning Rate ( between 0.0 and 1.0)", blackline, t2);
+                    IntitializeTextBox(title, "Epoch size", blackline, t3);
+                    IntitializeTextBox(title, "Number of Loops", blackline, t4);
                     Settings1.add(t1);
                     Settings1.add(t2);
                     Settings1.add(t3);
                     Settings1.add(t4);
+                    String s1[] = { "Test", "Train" };
+                    JComboBox c1 = new JComboBox(s1);                    
+                    String s2[] = { "Cyan", "Magenta", "Yellow", "Dark Blue",  "Red" , "Green", "Black"};
+                    JComboBox c2 = new JComboBox(s1);
+                    c1.addItemListener(new ItemListener() {
+                        public void itemStateChanged(ItemEvent arg0) {
+                           System.out.println(arg0.getItemSelectable());
+                        }
+                    });
+                    IntitializeTextBox(title, "Save scenarios to", blackline, c1);
+                    IntitializeTextBox(title, "Pen color", blackline, c2);
+                    Settings1.add(c1);
+                    Settings1.add(c2);
                     SettingsFrame2.addWindowListener(new WindowAdapter() {
                         public void windowClosing(WindowEvent we) {
                             Action = 2;
@@ -287,9 +300,10 @@ public class Driver {
                     });
                     SettingsFrame2.getContentPane().add(Settings1);
                     SettingsFrame2.add(Settings1, BorderLayout.PAGE_START);
+                    SettingsFrame2.pack();
                     SettingsFrame2.repaint();
                     SettingsFrame2.setVisible(true);
-                    switcheroo = false;
+                    Action = 2;
                 }
             }
             else if (Action == 8){
@@ -299,6 +313,12 @@ public class Driver {
             myFrame.repaint(); 
         }
 
+    }
+    public static void IntitializeTextBox( TitledBorder title1, String Title, Border blackline, JComponent t1 ) {
+    	title1 = BorderFactory.createTitledBorder(
+                blackline, Title);
+        title1.setTitleJustification(TitledBorder.CENTER);
+        t1.setBorder(title1);
     }
     public static int[] StringToArr(String str) {
         int counter = 0;
