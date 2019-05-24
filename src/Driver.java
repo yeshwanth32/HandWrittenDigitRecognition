@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 
@@ -39,6 +40,7 @@ public class Driver {
     private static int[] NetworkMiddle;
     private static int EpochSize, Loops;
     private static double LearningRate;
+    private static boolean SaveToTrain;
     public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
     public static void Initializations(ColorPanel P, JFrame myFrame){
         //ExitTrain = false;
@@ -47,6 +49,7 @@ public class Driver {
         LearningRate = 0.3;
         Action = 2;
         NetworkMiddle = new int[]{70,35};
+        SaveToTrain = true;
         myFrame.setTitle("GraphicsLab");
         myFrame.setSize(600,500);
         myFrame.setResizable(false);
@@ -154,7 +157,7 @@ public class Driver {
         t.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                WriteInTrainData(P.DrawBoxToCSV(),Integer.parseInt(t.getText()));
+                WriteInTrainData(P.DrawBoxToCSV(),Integer.parseInt(t.getText()),SaveToTrain);
                 System.out.println(P.DrawBoxToCSV());
                 Action = 2;
             }
@@ -171,7 +174,7 @@ public class Driver {
         String Location = location + "\\mnist_train.csv";
         String Location2 = location + "\\mnist_test.csv";
         NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
-        PopulateTestArray(Location,Location2);
+        PopulateTestAndTrainArray(Location,Location2);
         myFrame.repaint();
         //delay
         boolean switcheroo = true;
@@ -182,7 +185,7 @@ public class Driver {
                 TrainMNIST = Test.ReadNetwork();
                 System.out.println(TrainMNIST);
                 if (!TrainMNIST){
-                    PopulateTestArray(Location,Location2);
+                    PopulateTestAndTrainArray(Location,Location2);
                     System.out.println("Training " + EpochSize);
                     long startTime = System.nanoTime();
                     Train(Test);
@@ -218,92 +221,9 @@ public class Driver {
                 Action = 2;
             }
             else if ((Action == 6 || Action == 7)){
-            	System.out.println("blah");
                 if (!SettingsFrame2.isActive()) {
-                    NetworkSettings Settings1 = new NetworkSettings();
-                    SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
-                    SettingsFrame2.setSize(500,250);
-                    SettingsFrame2.setResizable(false);
-                    Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
-                    JTextField t1 = new JTextField();
-                    t1.setBounds(150,5,200,20);
-                    String Temp = "";
-                    for (int i = 0; i < NetworkMiddle.length; i++) {
-                    	Temp += NetworkMiddle[i] + ",";
-                    }
-                    t1.setText(Temp);
-                    JTextField t2 = new JTextField();
-                    t2.setText(Double.toString(LearningRate));
-                    JTextField t3 = new JTextField();
-                    t3.setText(Integer.toString(EpochSize));
-                    JTextField t4 = new JTextField();
-                    t4.setText(Integer.toString(Loops));
-                    t1.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t1.getText());
-                            NetworkMiddle = StringToArr(t1.getText());
-                            Action = 5;
-                            SettingsFrame2.dispatchEvent(new WindowEvent(SettingsFrame2, WindowEvent.WINDOW_CLOSING));
-                            
-                        }
-                    });
-                    t2.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t2.getText());
-                            LearningRate = Double.parseDouble(t2.getText());
-                        }
-                    });
-                    t3.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t3.getText());
-                            EpochSize = Integer.parseInt(t3.getText());
-                        }
-                    });
-                    t4.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent arg0) {
-                            System.out.println(t4.getText());
-                            Loops = Integer.parseInt(t4.getText());
-                        }
-                    });
-                    Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
-                    TitledBorder title = null;
-                    Border blackline = BorderFactory.createLineBorder(Color.black);
-                    IntitializeTextBox(title, "Middle Layers (end with a ',')", blackline, t1);
-                    IntitializeTextBox(title, "Learning Rate ( between 0.0 and 1.0)", blackline, t2);
-                    IntitializeTextBox(title, "Epoch size", blackline, t3);
-                    IntitializeTextBox(title, "Number of Loops", blackline, t4);
-                    Settings1.add(t1);
-                    Settings1.add(t2);
-                    Settings1.add(t3);
-                    Settings1.add(t4);
-                    String s1[] = { "Test", "Train" };
-                    JComboBox c1 = new JComboBox(s1);                    
-                    String s2[] = { "Cyan", "Magenta", "Yellow", "Dark Blue",  "Red" , "Green", "Black"};
-                    JComboBox c2 = new JComboBox(s1);
-                    c1.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent arg0) {
-                           System.out.println(arg0.getItemSelectable());
-                        }
-                    });
-                    IntitializeTextBox(title, "Save scenarios to", blackline, c1);
-                    IntitializeTextBox(title, "Pen color", blackline, c2);
-                    Settings1.add(c1);
-                    Settings1.add(c2);
-                    SettingsFrame2.addWindowListener(new WindowAdapter() {
-                        public void windowClosing(WindowEvent we) {
-                            Action = 2;
-                        }
-                    });
-                    SettingsFrame2.getContentPane().add(Settings1);
-                    SettingsFrame2.add(Settings1, BorderLayout.PAGE_START);
-                    SettingsFrame2.pack();
-                    SettingsFrame2.repaint();
-                    SettingsFrame2.setVisible(true);
-                    Action = 2;
+                	IntitializeSettingsFrame(SettingsFrame2, myFrame, P);
+                	System.out.println("blah");
                 }
             }
             else if (Action == 8){
@@ -313,6 +233,111 @@ public class Driver {
             myFrame.repaint(); 
         }
 
+    }
+    public static void IntitializeSettingsFrame(JFrame SettingsFrame2, JFrame myFrame, ColorPanel P) {
+    	NetworkSettings Settings1 = new NetworkSettings();
+        SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
+        SettingsFrame2.setSize(500,300);
+        SettingsFrame2.setResizable(false);
+        Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
+        JTextField t1 = new JTextField();
+        t1.setBounds(150,5,200,20);
+        String Temp = "";
+        for (int i = 0; i < NetworkMiddle.length; i++) {
+        	Temp += NetworkMiddle[i] + ",";
+        }
+        t1.setText(Temp);
+        JTextField t2 = new JTextField();
+        t2.setText(Double.toString(LearningRate));
+        JTextField t3 = new JTextField();
+        t3.setText(Integer.toString(EpochSize));
+        JTextField t4 = new JTextField();
+        t4.setText(Integer.toString(Loops));
+        t1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                System.out.println(t1.getText());
+                NetworkMiddle = StringToArr(t1.getText());
+                Action = 5;
+                SettingsFrame2.dispatchEvent(new WindowEvent(SettingsFrame2, WindowEvent.WINDOW_CLOSING));
+                
+            }
+        });
+        t2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                System.out.println(t2.getText());
+                LearningRate = Double.parseDouble(t2.getText());
+            }
+        });
+        t3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                System.out.println(t3.getText());
+                EpochSize = Integer.parseInt(t3.getText());
+            }
+        });
+        t4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                System.out.println(t4.getText());
+                Loops = Integer.parseInt(t4.getText());
+            }
+        });
+        Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
+        TitledBorder title = null;
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+        IntitializeTextBox(title, "Middle Layers (end with a ',')", blackline, t1);
+        IntitializeTextBox(title, "Learning Rate ( between 0.0 and 1.0)", blackline, t2);
+        IntitializeTextBox(title, "Epoch size", blackline, t3);
+        IntitializeTextBox(title, "Number of Loops", blackline, t4);
+        Settings1.add(t1);
+        Settings1.add(t2);
+        Settings1.add(t3);
+        Settings1.add(t4);
+        String s1[] = { "Test", "Train" };
+        JComboBox c1 = new JComboBox(s1);
+        if (SaveToTrain) {c1.setSelectedIndex(1);}
+        else {c1.setSelectedIndex(0);}
+        String s2[] = { "Cyan_1", "Magenta_2", "Yellow_3", "Dark Blue_4",  "Red_5" , "Green_6", "Black_7"};
+        JComboBox c2 = new JComboBox(s2);
+        c2.setSelectedIndex(P.GetPenColor()-1);
+        c1.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String selection = (String)c1.getSelectedItem();
+                System.out.println("Selected: "+selection ) ;
+                if (selection.equals("Train")) {SaveToTrain = true;}
+                if (selection.equals("Test")) {SaveToTrain = false;}
+                System.out.println(SaveToTrain);
+            }
+          }
+        });
+        c2.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String selection = (String)c2.getSelectedItem();
+                System.out.println("Selected: "+selection ) ;
+                P.ChangePenColor(Integer.parseInt(selection.substring(selection.length()-1)));
+                System.out.println(SaveToTrain);
+            }
+          }
+        });
+        IntitializeTextBox(title, "Save scenarios to", blackline, c1);
+        IntitializeTextBox(title, "Pen color", blackline, c2);
+        Settings1.add(c1);
+        Settings1.add(c2);
+        SettingsFrame2.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                Action = 2;
+            }
+        });
+        SettingsFrame2.getContentPane().add(Settings1);
+        SettingsFrame2.add(Settings1, BorderLayout.PAGE_START);
+        SettingsFrame2.repaint();
+        SettingsFrame2.setVisible(true);
     }
     public static void IntitializeTextBox( TitledBorder title1, String Title, Border blackline, JComponent t1 ) {
     	title1 = BorderFactory.createTitledBorder(
@@ -403,7 +428,7 @@ public class Driver {
         }
         myFrame.repaint();
     }
-    public static void PopulateTestArray(String Location, String Location2) throws FileNotFoundException, IOException {
+    public static void PopulateTestAndTrainArray(String Location, String Location2) throws FileNotFoundException, IOException {
         TrainLines = Files.readAllLines(Paths.get(Location));
         try {
             List<String> TrainLine2 = Files.readAllLines(Paths.get(Location + "mnist_train_user.csv"));
@@ -413,6 +438,13 @@ public class Driver {
         }catch (Exception e) {
         }
         TestLines = Files.readAllLines(Paths.get(Location2));
+        try {
+            List<String> TestLine2 = Files.readAllLines(Paths.get(Location + "mnist_test_user.csv"));
+            for (int i  = 0; i < TestLine2.size(); i++) {
+                TestLines.add(TestLine2.get(i));
+            }
+        }catch (Exception e) {
+        }
     }
     public static double[] GetCSVtoArray(int LineNum, boolean Train) throws FileNotFoundException {
         String Line;
@@ -493,15 +525,40 @@ public class Driver {
             return Element;
         }
     }
-    public static void WriteInTrainData(String PixelValues, int Label) {
-        try {
-            FileWriter fw= new FileWriter(location + "\\src\\mnist_train_user.csv",true);
-            PrintWriter printWriter = new PrintWriter(fw);
-            printWriter.println(Label + PixelValues);
-            fw.close();
-        } catch (IOException e1) {
-            System.out.println(e1.toString());
-            System.out.println("Can't save example");
-        }
+    public static void WriteInTrainData(String PixelValues, int Label, boolean Train) {
+    	if (Train) {
+	        try {
+	            FileWriter fw= new FileWriter(location + "\\mnist_train_user.csv",true);
+	            PrintWriter printWriter = new PrintWriter(fw);
+	            printWriter.println(Label + PixelValues);
+	            fw.close();
+	        } catch (IOException e1) {
+	        	File file = new File(location + "\\mnist_train_user.csv");
+	        	try {
+					System.out.println(file.createNewFile());
+				} catch (IOException e) {
+					System.out.println("File Exists");
+				}
+	        	
+	        	//WriteInTrainData(PixelValues,Label, Train);
+	        }
+    	}
+    	else {
+    		try {
+	            FileWriter fw= new FileWriter(location + "\\mnist_test_user.csv",true);
+	            PrintWriter printWriter = new PrintWriter(fw);
+	            printWriter.println(Label + PixelValues);
+	            fw.close();
+	        } catch (IOException e1) {
+	        	File file = new File(location + "\\mnist_test_user.csv");
+	        	try {
+					file.createNewFile();
+				} catch (IOException e) {
+					System.out.println("File Exists");
+				}
+	        	WriteInTrainData(PixelValues,Label, Train);
+	        }
+    	}
+    		
     }
 }

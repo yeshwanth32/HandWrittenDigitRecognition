@@ -85,10 +85,13 @@ public class ColorPanel extends JPanel{
     }
     public void ChangePenColor(int Color) {
     	for (int i = 0; i < DrawBoxes.length; i++) {
-    		for (int j = 0; j < DrawBoxes[i].length; i++) {
+    		for (int j = 0; j < DrawBoxes[i].length; j++) {
     			DrawBoxes[i][j].colorType = Color;
     		}
     	}
+    }
+    public int GetPenColor() {
+    	return DrawBoxes[0][0].colorType;
     }
     public void paintComponent(Graphics g) {
         DrawBox(g);
