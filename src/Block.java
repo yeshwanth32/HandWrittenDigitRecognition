@@ -37,7 +37,7 @@ public class Block{
         	break;
         }
         g.fillRect(X, Y, Width, Width);
-        
+        // Test for Intellij
     }
 
 }
