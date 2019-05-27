@@ -1,5 +1,3 @@
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +7,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -21,7 +18,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -29,7 +25,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.nio.file.Files;
 import java.util.Random;
-import java.util.Set;
 
 
 public class Driver {
@@ -41,7 +36,7 @@ public class Driver {
     private static int EpochSize, Loops;
     private static double LearningRate;
     private static boolean SaveToTrain;
-    public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
+    public static String location = "C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
     public static void Initializations(ColorPanel P, JFrame myFrame){
         //ExitTrain = false;
         EpochSize = 150;
@@ -171,6 +166,7 @@ public class Driver {
         /*JFrame myFrame2 = new JFrame();
         Initializations(P2,myFrame2);*/
         JFrame SettingsFrame2 = new JFrame();
+        JFrame FireWorksFrame = new JFrame();
         String Location = location + "\\mnist_train.csv";
         String Location2 = location + "\\mnist_test.csv";
         NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
@@ -219,6 +215,16 @@ public class Driver {
                 Test = new NeuralNetwork(NetworkMiddle);
                 Test.DisplayMiddleSizes();
                 Action = 2;
+            }
+            else if (Action == 6){
+                if (!FireWorksFrame.isActive()){
+                    FireWorksFrame.setSize(600,600);
+                    DisplayNetwork F1 = new DisplayNetwork(Test);
+                    FireWorksFrame.add(F1);
+                    FireWorksFrame.repaint();
+                    FireWorksFrame.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
+                    FireWorksFrame.setVisible(true);
+                }
             }
             else if ((Action ==7 )){
                 if (!SettingsFrame2.isActive()) {
@@ -378,30 +384,77 @@ public class Driver {
             }
             //if (ExitTrain) {System.out.println("Exit train is on");Action = 3; break;}
         }
-
         System.out.println("Correct count " + (correct / (double) size));
     }
     public static void Train(NeuralNetwork Test) throws FileNotFoundException, InterruptedException{
         int index = 0;
         int[] TotalNumberCount = new int[10];
-        for (int i = 0; i < 600; i++){
+        for (int i = 0; i < 600 ; i++){
             double[][] Epoch = new double[EpochSize][];
             int[] EpochLabel = new int[EpochSize];
             System.out.println("\nSetting up batch" + i);
-            RandomIndexes(0,9999,EpochSize,EpochLabel,Epoch);
+            RandomIndexes(0,TrainLines.size()-1,EpochSize,EpochLabel,Epoch);
+            System.out.println("Set up batch" + i);
+            System.out.print(ConsoleColors.RESET);
+            for (int k = 0; k < Loops; k++){
+                for (int l = 0; l < EpochSize; l++){
+                    double[] arrTest = Epoch[l];
+                    int x = EpochLabel[l];
+                    Test.Train(arrTest, x, LearningRate);
+                    Test.Output(arrTest);
+                    if (Test.Output == x){
+                        System.out.print(ConsoleColors.GREEN_BACKGROUND + ConsoleColors.BLACK + l + " , ");
+                        System.out.print(ConsoleColors.RESET);
+                    }
+                    else{
+                        System.out.print(ConsoleColors.RED_BACKGROUND + ConsoleColors.BLACK + l + " , ");
+                        System.out.print(ConsoleColors.RESET);
+                    }
+                }
+                System.out.println();
+            }
+            System.out.println(ConsoleColors.YELLOW_BACKGROUND_BRIGHT + Loops + ConsoleColors.RESET);
+            if (ExitTrain){System.out.println("Exit Train on"); break;}
+        }
+        System.out.print(ConsoleColors.RESET);
+        /*int index = 0;
+        int[] TotalNumberCount = new int[10];
+        for (int i = 0; i < 600; i++){
+            double[][] Epoch = new double[EpochSize][];
+            int[] EpochLabel = new int[EpochSize];
+            int[] Indexes = RandomIndexes(0,59999,EpochSize);
+            System.out.print(ConsoleColors.BLUE_BOLD);
+            System.out.println("\nSetting up batch" + i);
+            for (int j = 0; j < Epoch.length ; j++){
+                Epoch[j] = GetCSVtoArray(Indexes[j], true);
+                EpochLabel[j] = GetLabel(Indexes[j], true);
+                TotalNumberCount[EpochLabel[j]]++;
+                index++;
+            }
             System.out.println("Set up batch" + i);
             System.out.print(ConsoleColors.RESET);
             for (int k = 0; k < Loops; k++){
                 for (int l = 0; l < Epoch.length; l++){
                     double[] arrTest = Epoch[l];
                     int x = EpochLabel[l];
-                    Test.Train(arrTest, x, LearningRate);
+                    Test.Train(arrTest, x, 0.3);
                     Test.Output(arrTest);
+                    if (Test.Output == x){
+                        System.out.print(ConsoleColors.GREEN_BACKGROUND + ConsoleColors.BLACK + l + " , ");
+                        System.out.print(ConsoleColors.RESET);
+                    }
+                    else{
+                        System.out.print(ConsoleColors.RED_BACKGROUND + ConsoleColors.BLACK + l + " , ");
+                        System.out.print(ConsoleColors.RESET);
+                    }
                 }
+                System.out.println();
             }
             if (ExitTrain){System.out.println("Exit Train on"); break;}
         }
-        System.out.print(ConsoleColors.RESET);
+        System.out.print(ConsoleColors.PURPLE_BOLD_BRIGHT);
+        System.out.println(Arrays.toString(TotalNumberCount));
+        System.out.print(ConsoleColors.RESET);*/
     }
     static void Shuffle(List<String> array) {
         int n = array.size();

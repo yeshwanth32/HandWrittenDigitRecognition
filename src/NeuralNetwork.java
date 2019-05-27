@@ -4,7 +4,7 @@ import java.util.Arrays;
 @SuppressWarnings("unused")
 
 
-public class NeuralNetwork {
+public class NeuralNetwork implements NeuralNetDisplay{
 
     public double[] ValueI, ValueO;
     public double[] ErrorO;
@@ -14,11 +14,13 @@ public class NeuralNetwork {
     public double[][] ErrorM;
     public int[] MiddleSizes;
     public int Output;
+    //public double[] BiasesO;
     public NeuralNetwork(int[] middleSizes){
         ValueI = new double[28*28];
         MiddleSizes = middleSizes;
         ValueM = new double[MiddleSizes.length][];
         ValueO = new double[10];
+        //BiasesO = new double[10];
         for (int i = 0; i < ValueM.length; i++){
             ValueM[i] = new double[MiddleSizes[i]];
         }
@@ -93,6 +95,9 @@ public class NeuralNetwork {
                 }
             }
         }
+        /*for (int i = 0; i < BiasesO.length; i++){
+            BiasesO[i] += -learningRate*ErrorO[i];
+        }*/
     }
     public boolean Train(double[] Input, int ExpectedDigit, double LearningRate) throws InterruptedException{
         Output(Input);
@@ -127,6 +132,9 @@ public class NeuralNetwork {
                 BiasesM[i][j] =  Rand(-0.5,0.7);
             }
         }
+        /*for (int i = 0; i < BiasesO.length; i++){
+            BiasesO[i] = Rand(-0.5,0.7);
+        }*/
     }
     public void DisplayMiddleErrors(){
         System.out.print(ConsoleColors.GREEN_BOLD);
@@ -262,6 +270,7 @@ public class NeuralNetwork {
 	                Weights[i][j] = StringToArray(br.readLine());
 	            }
 	        }
+            //BiasesO = StringToArray(br.readLine());
 	        System.out.println("Done");
 	        return true;
     	}catch (Exception e) {
@@ -284,6 +293,7 @@ public class NeuralNetwork {
                 arr[i] = Double.parseDouble(str.substring(1, str.indexOf(']')));
             str = str.substring(str.indexOf(',')+1);
         }
+
         //System.out.println(Arrays.toString(arr));
         return arr;
     }
@@ -310,7 +320,34 @@ public class NeuralNetwork {
                 fw.write("\n");
             }
         }
+        //fw.write(Arrays.toString(BiasesO));
         fw.close();
         ReadNetwork();
+    }
+
+    @Override
+    public double[][] NeuronValues() {
+        double[][] neuronValues = new double[ValueM.length+2][];
+        neuronValues[0] = new double[ValueI.length];
+        for (int i = 0; i < neuronValues[0].length; i++){
+            neuronValues[0][i] = ValueI[i];
+        }
+        neuronValues[neuronValues.length-1] = new double[ValueO.length];
+        for (int i = 0; i < neuronValues[neuronValues.length-1].length; i++){
+            neuronValues[neuronValues.length-1][i] = ValueO[i];
+        }
+        int m = 0;
+        for (int j = 1; j < neuronValues.length-1; j++){
+            neuronValues[j] = new double[ValueM[m].length];
+            for (int i = 0; i < neuronValues[j].length; i++){
+                neuronValues[j][i] = ValueM[m][i];
+            }
+            m++;
+        }
+        return neuronValues;
+    }
+    @Override
+    public double[][][] WeightValues() {
+        return Weights;
     }
 }
