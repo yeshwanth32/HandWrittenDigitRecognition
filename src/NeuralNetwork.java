@@ -346,6 +346,15 @@ public class NeuralNetwork implements NeuralNetDisplay{
         }
         return neuronValues;
     }
+    public double[][] BiasValues() {
+        double[][] biasValues = new double[BiasesM.length][];
+        int m = 0;
+        for (int j = 1; j < biasValues.length-1; j++){
+            biasValues[j] = BiasesM[m];
+            m++;
+        }
+        return biasValues;
+    }
     @Override
     public double[][][] WeightValues() {
         return Weights;
