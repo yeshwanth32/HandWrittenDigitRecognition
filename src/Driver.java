@@ -36,7 +36,7 @@ public class Driver {
     private static int EpochSize, Loops;
     private static double LearningRate;
     private static boolean SaveToTrain;
-    public static String location = "C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
+    public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
     public static void Initializations(ColorPanel P, JFrame myFrame){
         //ExitTrain = false;
         EpochSize = 150;

@@ -20,11 +20,17 @@ public class DisplayNetwork extends JPanel{
 		 		int radius = Width/(neurons.length+neurons[i].length);
 		 		if (radius < 5){ radius = 5; gap = 0;}
 		 		if (i > 0){
-					neurons[i][j] = new Neuron(x,y,radius,(int) (Network.NeuronValues()[i][j]*255),new ArrayList<Line>());
+					neurons[i][j] = new Neuron(x,y,radius,Network.NeuronValues()[i-1][j],new ArrayList<Line>());
+					System.out.println("Network Values " + Network.NeuronValues()[i-1][j]);
 					for (int k = 0; k < neurons[i-1].length; k++){
-						neurons[i][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]
+						if (neurons[i-1][j].Activation > 0.0) {
+							neurons[i][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255, true)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]
+						}
+						else {
+							neurons[i][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255, false)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]
+						}						
 					}
-					System.out.println("Finished Layer" + i +" Neuron" + j + " : "+ neurons[i][j].Weights.size() + " - > " + x);
+					//System.out.println("Finished Layer" + i +" Neuron" + j + " : "+ neurons[i][j].Weights.size() + " - > " + x);
 				}
 		 		else{
 					neurons[i][j] = new Neuron(x,y,radius,(int) (Network.NeuronValues()[i][j]*255),new ArrayList<Line>());
@@ -37,11 +43,14 @@ public class DisplayNetwork extends JPanel{
 		 System.out.println("Finished Initialization");
 	}
     public void paintComponent(Graphics g) {
+    	super.paintComponent(g);
 		for (int i = 0; i < neurons.length; i++){
 			for (int j = 0; j < neurons[i].length; j++){
-				neurons[i][j].DrawParticle(g);
+				neurons[i][j].DrawNeuron(g);
 			}
+			
 		}
+		//repaint();
 		System.out.println("Drawing Complete " + neurons.length);
     }
 }
