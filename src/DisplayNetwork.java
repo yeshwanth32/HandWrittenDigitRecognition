@@ -19,22 +19,23 @@ public class DisplayNetwork extends JPanel{
 		 	for (int j = 0; j < neurons[i].length; j++){
 		 		int radius = Width/(neurons.length+neurons[i].length);
 		 		if (radius < 5){ radius = 5; gap = 0;}
+		 		neurons[i][j] = new Neuron(x,y,radius,(int) (Network.NeuronValues()[i][j]*255),Network.NeuronValues()[i][j],new ArrayList<Line>());
 		 		if (i > 0){
-					neurons[i][j] = new Neuron(x,y,radius,Network.NeuronValues()[i-1][j],new ArrayList<Line>());
-					System.out.println("Network Values " + Network.NeuronValues()[i-1][j]);
+		 			System.out.println(i);
 					for (int k = 0; k < neurons[i-1].length; k++){
-						if (neurons[i-1][j].Activation > 0.0) {
-							neurons[i][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255, true)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]
+						if (neurons[i-1][k].Activation > 0.8 && neurons[i][j].Activation > 0.8 ) {
+							System.out.println("Network Values " + Network.NeuronValues()[i-1][k]);
+							neurons[i-1][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255, true)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]
 						}
-						else {
-							neurons[i][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255, false)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]
-						}						
+//						else {
+//							neurons[i][j].Add(new Line(x - 1,y,neurons[i-1][k].X+neurons[i-1][k].Radius+1,neurons[i-1][k].Y,(int)((Math.random()*510)) - 255, true)); //(int)(Math.random()*255) //Network.WeightValues()[i-1][j][k]c]
+//						}						
 					}
 					//System.out.println("Finished Layer" + i +" Neuron" + j + " : "+ neurons[i][j].Weights.size() + " - > " + x);
 				}
-		 		else{
-					neurons[i][j] = new Neuron(x,y,radius,(int) (Network.NeuronValues()[i][j]*255),new ArrayList<Line>());
-				}
+		 		/*else{
+					neurons[i][j] = new Neuron(x,y,radius,(int) (Network.NeuronValues()[i][j]*255),Network.NeuronValues()[i][j],new ArrayList<Line>());
+				}*/
 				y += HorizontalSegmentsHeight + gap;
 			}
 		 	y = 0;

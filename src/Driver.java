@@ -251,6 +251,7 @@ public class Driver {
         });
         DisplayFrame.repaint();
         DisplayFrame.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
+        DisplayFrame.setResizable(false);
         DisplayFrame.setVisible(true);
     }
     public static void InitializeSettingsFrame(JFrame SettingsFrame2, JFrame myFrame, ColorPanel P) {

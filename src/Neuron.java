@@ -7,9 +7,10 @@ public class Neuron {
     public int ShadeColor;
     public double Activation;
     public ArrayList<Line> Weights;
-    public Neuron(int x, int y, int radius, double activation, ArrayList<Line> weights) {
+    public Neuron(int x, int y, int radius,int shade, double activation, ArrayList<Line> weights) {
     	Activation = activation;
-        X = x; Y = y; Radius = radius; ShadeColor = (int) (activation*255); Weights = weights;
+        X = x; Y = y; Radius = radius; ShadeColor = shade;
+        Weights = weights;
     }
     public void Add(Line a){
         Weights.add(a);
@@ -22,6 +23,8 @@ public class Neuron {
             Weights.get(i).DrawLine(g);
             //System.out.println(Weights.get(i).x1 + "," + Weights.get(i).y1 + " : "+Weights.get(i).x2 + "," + Weights.get(i).y2);
         }
+        /*g.setColor(Color.YELLOW);
+        g.drawString(Double.toString(Activation), X, Y);*/
     }
 
 }
