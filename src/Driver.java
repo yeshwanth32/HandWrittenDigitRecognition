@@ -166,7 +166,7 @@ public class Driver {
         /*JFrame myFrame2 = new JFrame();
         Initializations(P2,myFrame2);*/
         JFrame SettingsFrame2 = new JFrame();
-        JFrame FireWorksFrame = new JFrame();
+        JFrame DisplayFrame = new JFrame();
         String Location = location + "\\mnist_train.csv";
         String Location2 = location + "\\mnist_test.csv";
         NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
@@ -184,7 +184,7 @@ public class Driver {
                     PopulateTestAndTrainArray(Location,Location2);
                     System.out.println("Training " + EpochSize);
                     long startTime = System.nanoTime();
-                    Train(Test);
+                    Train(Test,DisplayFrame,myFrame,P);
                     long endTime = System.nanoTime();
                     System.out.println(ConsoleColors.BLUE_BRIGHT + (endTime - startTime) / (6e+10));
                     System.out.println("Training Done");
@@ -203,6 +203,9 @@ public class Driver {
                 //P.DisplayBoxes();
                 Test.DisplayInput();
                 Test.Output(Test.ValueI,P);
+                /*DisplayFrame.setVisible(false);
+                DisplayFrame = new JFrame();
+                InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);*/
                 Action = 2;
             }
             else if (Action == 4){
@@ -217,18 +220,16 @@ public class Driver {
                 Action = 2;
             }
             else if (Action == 6){
-                if (!FireWorksFrame.isActive()){
-                    FireWorksFrame.setSize(600,600);
-                    DisplayNetwork F1 = new DisplayNetwork(Test);
-                    FireWorksFrame.add(F1);
-                    FireWorksFrame.repaint();
-                    FireWorksFrame.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
-                    FireWorksFrame.setVisible(true);
+                if (!DisplayFrame.isActive()){
+                    DisplayFrame.setVisible(false);
+                    DisplayFrame = new JFrame();
+                    InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);
+                    Action = 2;
                 }
             }
             else if ((Action ==7 )){
                 if (!SettingsFrame2.isActive()) {
-                	IntitializeSettingsFrame(SettingsFrame2, myFrame, P);
+                	InitializeSettingsFrame(SettingsFrame2, myFrame, P);
                 	System.out.println("blah");
                 }
             }
@@ -240,7 +241,19 @@ public class Driver {
         }
 
     }
-    public static void IntitializeSettingsFrame(JFrame SettingsFrame2, JFrame myFrame, ColorPanel P) {
+    public static void InitializeDisplayFrame(JFrame DisplayFrame, JFrame myFrame, ColorPanel P, NeuralNetwork Test) {
+        DisplayFrame.setSize(700,750);
+        DisplayFrame.setBackground(Color.GRAY);
+        DisplayNetwork F1 = new DisplayNetwork(Test,700,750);
+        DisplayFrame.add(F1);
+        DisplayFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) { Action = 2; }
+        });
+        DisplayFrame.repaint();
+        DisplayFrame.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
+        DisplayFrame.setVisible(true);
+    }
+    public static void InitializeSettingsFrame(JFrame SettingsFrame2, JFrame myFrame, ColorPanel P) {
     	NetworkSettings Settings1 = new NetworkSettings();
         SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
         SettingsFrame2.setSize(500,300);
@@ -293,10 +306,10 @@ public class Driver {
         Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
         TitledBorder title = null;
         Border blackline = BorderFactory.createLineBorder(Color.black);
-        IntitializeTextBox(title, "Middle Layers (end with a ',')", blackline, t1);
-        IntitializeTextBox(title, "Learning Rate ( between 0.0 and 1.0)", blackline, t2);
-        IntitializeTextBox(title, "Epoch size", blackline, t3);
-        IntitializeTextBox(title, "Number of Loops", blackline, t4);
+        InitializeTextBox(title, "Middle Layers (end with a ',')", blackline, t1);
+        InitializeTextBox(title, "Learning Rate ( between 0.0 and 1.0)", blackline, t2);
+        InitializeTextBox(title, "Epoch size", blackline, t3);
+        InitializeTextBox(title, "Number of Loops", blackline, t4);
         Settings1.add(t1);
         Settings1.add(t2);
         Settings1.add(t3);
@@ -331,8 +344,8 @@ public class Driver {
             }
           }
         });
-        IntitializeTextBox(title, "Save scenarios to", blackline, c1);
-        IntitializeTextBox(title, "Pen color", blackline, c2);
+        InitializeTextBox(title, "Save scenarios to", blackline, c1);
+        InitializeTextBox(title, "Pen color", blackline, c2);
         Settings1.add(c1);
         Settings1.add(c2);
         SettingsFrame2.addWindowListener(new WindowAdapter() {
@@ -345,7 +358,7 @@ public class Driver {
         SettingsFrame2.repaint();
         SettingsFrame2.setVisible(true);
     }
-    public static void IntitializeTextBox( TitledBorder title1, String Title, Border blackline, JComponent t1 ) {
+    public static void InitializeTextBox(TitledBorder title1, String Title, Border blackline, JComponent t1 ) {
     	title1 = BorderFactory.createTitledBorder(
                 blackline, Title);
         title1.setTitleJustification(TitledBorder.CENTER);
@@ -386,7 +399,7 @@ public class Driver {
         }
         System.out.println("Correct count " + (correct / (double) size));
     }
-    public static void Train(NeuralNetwork Test) throws FileNotFoundException, InterruptedException{
+    public static void Train(NeuralNetwork Test, JFrame DisplayFrame, JFrame myFrame, ColorPanel P) throws FileNotFoundException, InterruptedException{
         int index = 0;
         int[] TotalNumberCount = new int[10];
         for (int i = 0; i < 600 ; i++){
@@ -413,6 +426,9 @@ public class Driver {
                 }
                 System.out.println();
             }
+            /*DisplayFrame.setVisible(false);
+            DisplayFrame = new JFrame();
+            InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);*/
             System.out.println(ConsoleColors.YELLOW_BACKGROUND_BRIGHT + Loops + ConsoleColors.RESET);
             if (ExitTrain){System.out.println("Exit Train on"); break;}
         }
