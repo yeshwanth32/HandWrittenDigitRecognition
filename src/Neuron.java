@@ -23,7 +23,7 @@ public class Neuron {
             Weights.get(i).DrawLine(g);
             //System.out.println(Weights.get(i).x1 + "," + Weights.get(i).y1 + " : "+Weights.get(i).x2 + "," + Weights.get(i).y2);
         }
-        if (Radius > 15 && Activation > 0.0) {
+        if (Radius > 15 && Activation > 0.099) {
         	Font font = new Font ("Courier New", 1, Radius/2); //Initializes the font
             g.setFont(font);
             g.setColor(Color.GREEN);

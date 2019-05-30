@@ -36,8 +36,8 @@ public class Driver {
     private static int EpochSize, Loops, OuterLoopSize;
     private static double LearningRate;
     private static boolean SaveToTrain;
-    //public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
-    public static String location = "C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
+    public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
+    //public static String location = "C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
     public static void Initializations(ColorPanel P, JFrame myFrame){
         //ExitTrain = false;
         EpochSize = 150;
@@ -314,7 +314,7 @@ public class Driver {
         });
         Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
         Border blackline = BorderFactory.createLineBorder(Color.black);
-        InitializeTextBox("Middle Layers (end with a ',')", blackline, t1);
+        InitializeTextBox("Middle Layers (end with a ',' and don't enter a 0 and try to keep it below 5,000)", blackline, t1);
         InitializeTextBox("Learning Rate ( between 0.0 and 1.0)", blackline, t2);
         InitializeTextBox("Epoch size", blackline, t3);
         InitializeTextBox("Number of Loops", blackline, t4);
