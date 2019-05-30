@@ -33,10 +33,11 @@ public class Driver {
     private static List<String> TrainLines;
     private static List<String> TestLines;
     private static int[] NetworkMiddle;
-    private static int EpochSize, Loops;
+    private static int EpochSize, Loops, OuterLoopSize;
     private static double LearningRate;
     private static boolean SaveToTrain;
-    public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
+    //public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
+    public static String location = "C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
     public static void Initializations(ColorPanel P, JFrame myFrame){
         //ExitTrain = false;
         EpochSize = 150;
@@ -45,6 +46,7 @@ public class Driver {
         Action = 2;
         NetworkMiddle = new int[]{70,35};
         SaveToTrain = true;
+        OuterLoopSize = 600;
         myFrame.setTitle("GraphicsLab");
         myFrame.setSize(600,500);
         myFrame.setResizable(false);
@@ -106,15 +108,15 @@ public class Driver {
         b4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                /*ExitTrain = !ExitTrain;*/
-                try {
+                ExitTrain = !ExitTrain;
+                /*try {
                     System.out.println("Test1");
                     P.ArrayToDrawBox( GetCSVtoArray(((int)(Math.random()*1000)), true));
                     P.DisplayBoxes();
                     P.repaint();
                 }catch (Exception e){
 
-                }
+                }*/
             }
         });
         b2.addActionListener(new ActionListener() {
@@ -167,11 +169,9 @@ public class Driver {
         Initializations(P2,myFrame2);*/
         JFrame SettingsFrame2 = new JFrame();
         JFrame DisplayFrame = new JFrame();
-        String Location = location + "\\mnist_train.csv";
-        String Location2 = location + "\\mnist_test.csv";
         NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
-        PopulateTestAndTrainArray(Location,Location2);
         myFrame.repaint();
+        PopulateTestAndTrainArray();
         //delay
         boolean switcheroo = true;
         while (true) {
@@ -181,7 +181,7 @@ public class Driver {
                 TrainMNIST = Test.ReadNetwork();
                 System.out.println(TrainMNIST);
                 if (!TrainMNIST){
-                    PopulateTestAndTrainArray(Location,Location2);
+                    PopulateTestAndTrainArray();
                     System.out.println("Training " + EpochSize);
                     long startTime = System.nanoTime();
                     Train(Test,DisplayFrame,myFrame,P);
@@ -257,7 +257,7 @@ public class Driver {
     public static void InitializeSettingsFrame(JFrame SettingsFrame2, JFrame myFrame, ColorPanel P) {
     	NetworkSettings Settings1 = new NetworkSettings();
         SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
-        SettingsFrame2.setSize(500,300);
+        SettingsFrame2.setSize(500,350);
         SettingsFrame2.setResizable(false);
         Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
         JTextField t1 = new JTextField();
@@ -273,6 +273,8 @@ public class Driver {
         t3.setText(Integer.toString(EpochSize));
         JTextField t4 = new JTextField();
         t4.setText(Integer.toString(Loops));
+        JTextField t5 = new JTextField();
+        t5.setText(Integer.toString(OuterLoopSize));
         t1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -304,17 +306,24 @@ public class Driver {
                 Loops = Integer.parseInt(t4.getText());
             }
         });
+        t5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                OuterLoopSize = Integer.parseInt(t5.getText());
+            }
+        });
         Settings1.setLayout(new BoxLayout(Settings1, BoxLayout.PAGE_AXIS));
-        TitledBorder title = null;
         Border blackline = BorderFactory.createLineBorder(Color.black);
-        InitializeTextBox(title, "Middle Layers (end with a ',')", blackline, t1);
-        InitializeTextBox(title, "Learning Rate ( between 0.0 and 1.0)", blackline, t2);
-        InitializeTextBox(title, "Epoch size", blackline, t3);
-        InitializeTextBox(title, "Number of Loops", blackline, t4);
+        InitializeTextBox("Middle Layers (end with a ',')", blackline, t1);
+        InitializeTextBox("Learning Rate ( between 0.0 and 1.0)", blackline, t2);
+        InitializeTextBox("Epoch size", blackline, t3);
+        InitializeTextBox("Number of Loops", blackline, t4);
+        InitializeTextBox("Number of Outer Loops", blackline, t5);
         Settings1.add(t1);
         Settings1.add(t2);
         Settings1.add(t3);
         Settings1.add(t4);
+        Settings1.add(t5);
         String s1[] = { "Test", "Train" };
         JComboBox c1 = new JComboBox(s1);
         if (SaveToTrain) {c1.setSelectedIndex(1);}
@@ -345,8 +354,8 @@ public class Driver {
             }
           }
         });
-        InitializeTextBox(title, "Save scenarios to", blackline, c1);
-        InitializeTextBox(title, "Pen color", blackline, c2);
+        InitializeTextBox("Save scenarios to", blackline, c1);
+        InitializeTextBox("Pen color", blackline, c2);
         Settings1.add(c1);
         Settings1.add(c2);
         SettingsFrame2.addWindowListener(new WindowAdapter() {
@@ -359,8 +368,8 @@ public class Driver {
         SettingsFrame2.repaint();
         SettingsFrame2.setVisible(true);
     }
-    public static void InitializeTextBox(TitledBorder title1, String Title, Border blackline, JComponent t1 ) {
-    	title1 = BorderFactory.createTitledBorder(
+    public static void InitializeTextBox(String Title, Border blackline, JComponent t1 ) {
+        TitledBorder title1 = BorderFactory.createTitledBorder(
                 blackline, Title);
         title1.setTitleJustification(TitledBorder.CENTER);
         t1.setBorder(title1);
@@ -403,7 +412,7 @@ public class Driver {
     public static void Train(NeuralNetwork Test, JFrame DisplayFrame, JFrame myFrame, ColorPanel P) throws FileNotFoundException, InterruptedException{
         int index = 0;
         int[] TotalNumberCount = new int[10];
-        for (int i = 0; i < 600 ; i++){
+        for (int i = 0; i < OuterLoopSize ; i++){
             double[][] Epoch = new double[EpochSize][];
             int[] EpochLabel = new int[EpochSize];
             System.out.println("\nSetting up batch" + i);
@@ -498,18 +507,19 @@ public class Driver {
         }
         myFrame.repaint();
     }
-    public static void PopulateTestAndTrainArray(String Location, String Location2) throws FileNotFoundException, IOException {
-        TrainLines = Files.readAllLines(Paths.get(Location));
+    public static void PopulateTestAndTrainArray() throws FileNotFoundException, IOException {
+        TrainLines = Files.readAllLines(Paths.get(location + "\\mnist_train.csv"));
         try {
-            List<String> TrainLine2 = Files.readAllLines(Paths.get(Location + "mnist_train_user.csv"));
+            List<String> TrainLine2 = Files.readAllLines(Paths.get(location + "\\mnist_train_user.csv"));
             for (int i  = 0; i < TrainLine2.size(); i++) {
                 TrainLines.add(TrainLine2.get(i));
             }
         }catch (Exception e) {
         }
-        TestLines = Files.readAllLines(Paths.get(Location2));
+        TestLines = Files.readAllLines(Paths.get(location + "\\mnist_test.csv"));
+        System.out.println(TestLines.size());
         try {
-            List<String> TestLine2 = Files.readAllLines(Paths.get(Location + "mnist_test_user.csv"));
+            List<String> TestLine2 = Files.readAllLines(Paths.get(location + "\\mnist_test_user.csv"));
             for (int i  = 0; i < TestLine2.size(); i++) {
                 TestLines.add(TestLine2.get(i));
             }
