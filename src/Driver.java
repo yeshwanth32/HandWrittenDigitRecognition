@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -201,7 +202,7 @@ public class Driver {
             else if (Action == 3){
                 Test.setValueI(P.GetDrawBoxValues());
                 //P.DisplayBoxes();
-                Test.DisplayInput();
+                //Test.DisplayInput();
                 Test.Output(Test.ValueI,P);
                 /*DisplayFrame.setVisible(false);
                 DisplayFrame = new JFrame();
@@ -229,8 +230,10 @@ public class Driver {
             }
             else if ((Action ==7 )){
                 if (!SettingsFrame2.isActive()) {
+                	SettingsFrame2.setVisible(false);
+                	SettingsFrame2 = new JFrame();
                 	InitializeSettingsFrame(SettingsFrame2, myFrame, P);
-                	System.out.println("blah");
+                	Action = 2;
                 }
             }
             else if (Action == 8){
@@ -255,11 +258,11 @@ public class Driver {
         DisplayFrame.setVisible(true);
     }
     public static void InitializeSettingsFrame(JFrame SettingsFrame2, JFrame myFrame, ColorPanel P) {
-    	NetworkSettings Settings1 = new NetworkSettings();
+    	JPanel Settings1 = new JPanel();
         SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
-        SettingsFrame2.setSize(500,350);
+        SettingsFrame2.setSize(500,325);
         SettingsFrame2.setResizable(false);
-        Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
+        //Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
         JTextField t1 = new JTextField();
         t1.setBounds(150,5,200,20);
         String Temp = "";
@@ -318,7 +321,7 @@ public class Driver {
         InitializeTextBox("Learning Rate ( between 0.0 and 1.0)", blackline, t2);
         InitializeTextBox("Epoch size", blackline, t3);
         InitializeTextBox("Number of Loops", blackline, t4);
-        InitializeTextBox("Number of Outer Loops", blackline, t5);
+        InitializeTextBox("Number of Batches", blackline, t5);
         Settings1.add(t1);
         Settings1.add(t2);
         Settings1.add(t3);
@@ -371,7 +374,7 @@ public class Driver {
     public static void InitializeTextBox(String Title, Border blackline, JComponent t1 ) {
         TitledBorder title1 = BorderFactory.createTitledBorder(
                 blackline, Title);
-        title1.setTitleJustification(TitledBorder.CENTER);
+        title1.setTitleJustification(TitledBorder.LEFT);
         t1.setBorder(title1);
     }
     public static int[] StringToArr(String str) {
@@ -418,31 +421,32 @@ public class Driver {
             System.out.println("\nSetting up batch" + i);
             RandomIndexes(0,TrainLines.size()-1,EpochSize,EpochLabel,Epoch);
             System.out.println("Set up batch" + i);
-            System.out.print(ConsoleColors.RESET);
+            //System.out.print(ConsoleColors.RESET);
             for (int k = 0; k < Loops; k++){
                 for (int l = 0; l < EpochSize; l++){
                     double[] arrTest = Epoch[l];
                     int x = EpochLabel[l];
                     Test.Train(arrTest, x, LearningRate);
                     Test.Output(arrTest);
-                    if (Test.Output == x){
+                    /*if (Test.Output == x){
                         System.out.print(ConsoleColors.GREEN_BACKGROUND + ConsoleColors.BLACK + l + " , ");
                         System.out.print(ConsoleColors.RESET);
                     }
                     else{
                         System.out.print(ConsoleColors.RED_BACKGROUND + ConsoleColors.BLACK + l + " , ");
                         System.out.print(ConsoleColors.RESET);
-                    }
+                    }*/
                 }
-                System.out.println();
+                //System.out.println();
             }
+            System.out.println(i + " batch training done");
             /*DisplayFrame.setVisible(false);
             DisplayFrame = new JFrame();
             InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);*/
-            System.out.println(ConsoleColors.YELLOW_BACKGROUND_BRIGHT + Loops + ConsoleColors.RESET);
+            //System.out.println(ConsoleColors.YELLOW_BACKGROUND_BRIGHT + Loops + ConsoleColors.RESET);
             if (ExitTrain){System.out.println("Exit Train on"); break;}
         }
-        System.out.print(ConsoleColors.RESET);
+        //System.out.print(ConsoleColors.RESET);
         /*int index = 0;
         int[] TotalNumberCount = new int[10];
         for (int i = 0; i < 600; i++){
@@ -517,7 +521,7 @@ public class Driver {
         }catch (Exception e) {
         }
         TestLines = Files.readAllLines(Paths.get(location + "\\mnist_test.csv"));
-        System.out.println(TestLines.size());
+        //System.out.println(TestLines.size());
         try {
             List<String> TestLine2 = Files.readAllLines(Paths.get(location + "\\mnist_test_user.csv"));
             for (int i  = 0; i < TestLine2.size(); i++) {
@@ -615,9 +619,9 @@ public class Driver {
 	        } catch (IOException e1) {
 	        	File file = new File(location + "\\mnist_train_user.csv");
 	        	try {
-					System.out.println(file.createNewFile());
+					file.createNewFile();
 				} catch (IOException e) {
-					System.out.println("File Exists");
+					System.out.println("File Creation Error");
 				}
 	        	
 	        	//WriteInTrainData(PixelValues,Label, Train);
@@ -634,7 +638,7 @@ public class Driver {
 	        	try {
 					file.createNewFile();
 				} catch (IOException e) {
-					System.out.println("File Exists");
+					System.out.println("File Creation Error");
 				}
 	        	WriteInTrainData(PixelValues,Label, Train);
 	        }

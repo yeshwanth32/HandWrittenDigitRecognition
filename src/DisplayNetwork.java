@@ -41,7 +41,7 @@ public class DisplayNetwork extends JPanel{
 				}
 			}
 		 }
-		 System.out.println("Finished Initialization");
+		 //System.out.println("Finished Initialization");
 	}
     public void paintComponent(Graphics g) {
     	super.paintComponent(g);
@@ -52,6 +52,6 @@ public class DisplayNetwork extends JPanel{
 			
 		}
 		//repaint();
-		System.out.println("Drawing Complete " + neurons.length);
+		//System.out.println("Drawing Complete " + neurons.length);
     }
 }
