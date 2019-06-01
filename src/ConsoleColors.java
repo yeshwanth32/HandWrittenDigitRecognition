@@ -1,3 +1,9 @@
+// class description
+// This code is borrowed from the following stack overflow question :
+// https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+// This code is used for testing purposes. It is used to change the font color of the console
+// outputs to highlight the required content.
+
 public class ConsoleColors {
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset

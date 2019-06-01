@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
+// class description
+// This is the Block class, which is used in the color panel for the user to draw on.
+// Each block has a pen colorType which the user can change, and the ShadeColor variable
+// shows how dark or light the block has to be coloured.
 
 public class Block{
     public int X, Y;
@@ -37,8 +41,6 @@ public class Block{
         	break;
         }
         g.fillRect(X, Y, Width, Width);
-        // Test for Intellij
-        //Test2
     }
 
 }

@@ -8,9 +8,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -21,13 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-
+import java.util.Scanner;
 import java.nio.file.Paths;
 import java.util.List;
 import java.nio.file.Files;
-import java.util.Random;
 
-
+// class description
+// this is the Main Driver, the place where all the magic happens.
 public class Driver {
     private static int Action;
     private static boolean ExitTrain;
@@ -37,10 +35,13 @@ public class Driver {
     private static int EpochSize, Loops, OuterLoopSize;
     private static double LearningRate;
     private static boolean SaveToTrain;
-    public static String location = "C:\\Users\\bommareddyy\\Desktop\\HandwrittenDigitTrainingFiles";
-    //public static String location = "C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
+    //"C:\\Users\\yeshw\\Desktop\\HandwrittenDigitTrainingFiles";
+    public static String location ;
     public static void Initializations(ColorPanel P, JFrame myFrame){
-        //ExitTrain = false;
+        ExitTrain = false;
+        System.out.println("Please enter the location of training and test files (don't include file name)");
+        Scanner scan = new Scanner(System.in);
+        location = scan.next();
         EpochSize = 150;
         Loops = 45;
         LearningRate = 0.3;
@@ -74,7 +75,6 @@ public class Driver {
         b6.setBounds(450,190,60,30);
         b7.setBounds(510,190,60,30);
         AddListenersToButtons(b1,b2,b3,b4,b5,b6,b7,b8,t,P);
-        //frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         myFrame.add(t);
         myFrame.add(b1);
         myFrame.add(b2);
@@ -110,20 +110,11 @@ public class Driver {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 ExitTrain = !ExitTrain;
-                /*try {
-                    System.out.println("Test1");
-                    P.ArrayToDrawBox( GetCSVtoArray(((int)(Math.random()*1000)), true));
-                    P.DisplayBoxes();
-                    P.repaint();
-                }catch (Exception e){
-
-                }*/
             }
         });
         b2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                System.out.println("TestButton2");
                 if (Action == 1) { Action = 2;}
                 if (Action == 2) { Action = 1; P.InitializeDrawBox();}
             }
@@ -156,40 +147,34 @@ public class Driver {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 WriteInTrainData(P.DrawBoxToCSV(),Integer.parseInt(t.getText()),SaveToTrain);
-                System.out.println(P.DrawBoxToCSV());
+                System.out.println("Saved in auxiliary file");
                 Action = 2;
             }
         });
     }
-    public static void main(String[] arg) throws FileNotFoundException, InterruptedException, IOException {
+    public static void main(String[] arg) throws InterruptedException, IOException {
         ColorPanel P = new ColorPanel();
         JFrame myFrame = new JFrame();
         Initializations(P,myFrame);
-        //ColorPanel P2 = new ColorPanel();
-        /*JFrame myFrame2 = new JFrame();
-        Initializations(P2,myFrame2);*/
         JFrame SettingsFrame2 = new JFrame();
         JFrame DisplayFrame = new JFrame();
-        NeuralNetwork Test = new NeuralNetwork(NetworkMiddle);
+        NeuralNetwork neuralNetwork = new NeuralNetwork(NetworkMiddle);
         myFrame.repaint();
         PopulateTestAndTrainArray();
-        //delay
-        boolean switcheroo = true;
         while (true) {
-            //PrintWriter writer = new PrintWriter("Test.txt", "UTF-8");
             if (Action == 1) {
                 boolean TrainMNIST = true;
-                TrainMNIST = Test.ReadNetwork();
-                System.out.println(TrainMNIST);
+                TrainMNIST = neuralNetwork.ReadNetwork();
+                //System.out.println(TrainMNIST);
                 if (!TrainMNIST){
                     PopulateTestAndTrainArray();
                     System.out.println("Training " + EpochSize);
                     long startTime = System.nanoTime();
-                    Train(Test,DisplayFrame,myFrame,P);
+                    Train(neuralNetwork);
                     long endTime = System.nanoTime();
                     System.out.println(ConsoleColors.BLUE_BRIGHT + (endTime - startTime) / (6e+10));
                     System.out.println("Training Done");
-                    TestNetwork(Test);
+                    TestNetwork(neuralNetwork);
                 }
                 else{
                     System.out.println("Trained using save file");
@@ -200,31 +185,26 @@ public class Driver {
                 P.SetMouseOn(true);
             }
             else if (Action == 3){
-                Test.setValueI(P.GetDrawBoxValues());
-                //P.DisplayBoxes();
-                //Test.DisplayInput();
-                Test.Output(Test.ValueI,P);
-                /*DisplayFrame.setVisible(false);
-                DisplayFrame = new JFrame();
-                InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);*/
+                neuralNetwork.setValueI(P.GetDrawBoxValues());
+                neuralNetwork.Output(neuralNetwork.ValueI,P);
                 Action = 2;
             }
             else if (Action == 4){
-                Test.SaveNetwork();
+                neuralNetwork.SaveNetwork();
                 System.out.println("Saved");
                 Action = 2;
             }
             else if (Action == 5) {
-                Test.DisplayMiddleSizes();
-                Test = new NeuralNetwork(NetworkMiddle);
-                Test.DisplayMiddleSizes();
+                neuralNetwork.DisplayMiddleSizes();
+                neuralNetwork = new NeuralNetwork(NetworkMiddle);
+                neuralNetwork.DisplayMiddleSizes();
                 Action = 2;
             }
             else if (Action == 6){
                 if (!DisplayFrame.isActive()){
                     DisplayFrame.setVisible(false);
                     DisplayFrame = new JFrame();
-                    InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);
+                    InitializeDisplayFrame(DisplayFrame,myFrame,P,neuralNetwork);
                     Action = 2;
                 }
             }
@@ -237,7 +217,7 @@ public class Driver {
                 }
             }
             else if (Action == 8){
-                TestNetwork(Test);
+                TestNetwork(neuralNetwork);
                 Action = 2;
             }
             myFrame.repaint(); 
@@ -262,7 +242,6 @@ public class Driver {
         SettingsFrame2.setLocation(myFrame.getX()+myFrame.getWidth()+10,myFrame.getY());
         SettingsFrame2.setSize(500,325);
         SettingsFrame2.setResizable(false);
-        //Settings1.setBounds(SettingsFrame2.getX(), SettingsFrame2.getY(), SettingsFrame2.getWidth(), SettingsFrame2.getHeight());
         JTextField t1 = new JTextField();
         t1.setBounds(150,5,200,20);
         String Temp = "";
@@ -393,7 +372,7 @@ public class Driver {
         }
         return arr;
     }
-    public static void TestNetwork(NeuralNetwork Test) throws FileNotFoundException{
+    public static void TestNetwork(NeuralNetwork Test){
         System.out.println("Testing " + TestLines.size());
         int correct = 0;
         int size = TestLines.size();
@@ -408,27 +387,28 @@ public class Driver {
                 correct++;
                 NumberCorrect[x]++;
             }
-            //if (ExitTrain) {System.out.println("Exit train is on");Action = 3; break;}
         }
         System.out.println("Correct count " + (correct / (double) size));
     }
-    public static void Train(NeuralNetwork Test, JFrame DisplayFrame, JFrame myFrame, ColorPanel P) throws FileNotFoundException, InterruptedException{
-        int index = 0;
-        int[] TotalNumberCount = new int[10];
+    public static void Train(NeuralNetwork Test) throws InterruptedException{
         for (int i = 0; i < OuterLoopSize ; i++){
             double[][] Epoch = new double[EpochSize][];
             int[] EpochLabel = new int[EpochSize];
             System.out.println("\nSetting up batch" + i);
             RandomIndexes(0,TrainLines.size()-1,EpochSize,EpochLabel,Epoch);
             System.out.println("Set up batch" + i);
-            //System.out.print(ConsoleColors.RESET);
             for (int k = 0; k < Loops; k++){
                 for (int l = 0; l < EpochSize; l++){
                     double[] arrTest = Epoch[l];
                     int x = EpochLabel[l];
                     Test.Train(arrTest, x, LearningRate);
                     Test.Output(arrTest);
-                    /*if (Test.Output == x){
+                    // uncomment the following code and the println to see the training in action
+                    // this feature will only work when using Intellij IDE. The correctly guessed
+                    // training scenarios are highlighted in green and the wrong ones in red.
+                    // as the training progresses if you see more green than red outputs in each
+                    // batch that means that the training is going really well.
+                     /*if (Test.Output == x){
                         System.out.print(ConsoleColors.GREEN_BACKGROUND + ConsoleColors.BLACK + l + " , ");
                         System.out.print(ConsoleColors.RESET);
                     }
@@ -440,97 +420,29 @@ public class Driver {
                 //System.out.println();
             }
             System.out.println(i + " batch training done");
-            /*DisplayFrame.setVisible(false);
-            DisplayFrame = new JFrame();
-            InitializeDisplayFrame(DisplayFrame,myFrame,P,Test);*/
-            //System.out.println(ConsoleColors.YELLOW_BACKGROUND_BRIGHT + Loops + ConsoleColors.RESET);
             if (ExitTrain){System.out.println("Exit Train on"); break;}
         }
-        //System.out.print(ConsoleColors.RESET);
-        /*int index = 0;
-        int[] TotalNumberCount = new int[10];
-        for (int i = 0; i < 600; i++){
-            double[][] Epoch = new double[EpochSize][];
-            int[] EpochLabel = new int[EpochSize];
-            int[] Indexes = RandomIndexes(0,59999,EpochSize);
-            System.out.print(ConsoleColors.BLUE_BOLD);
-            System.out.println("\nSetting up batch" + i);
-            for (int j = 0; j < Epoch.length ; j++){
-                Epoch[j] = GetCSVtoArray(Indexes[j], true);
-                EpochLabel[j] = GetLabel(Indexes[j], true);
-                TotalNumberCount[EpochLabel[j]]++;
-                index++;
-            }
-            System.out.println("Set up batch" + i);
-            System.out.print(ConsoleColors.RESET);
-            for (int k = 0; k < Loops; k++){
-                for (int l = 0; l < Epoch.length; l++){
-                    double[] arrTest = Epoch[l];
-                    int x = EpochLabel[l];
-                    Test.Train(arrTest, x, 0.3);
-                    Test.Output(arrTest);
-                    if (Test.Output == x){
-                        System.out.print(ConsoleColors.GREEN_BACKGROUND + ConsoleColors.BLACK + l + " , ");
-                        System.out.print(ConsoleColors.RESET);
-                    }
-                    else{
-                        System.out.print(ConsoleColors.RED_BACKGROUND + ConsoleColors.BLACK + l + " , ");
-                        System.out.print(ConsoleColors.RESET);
-                    }
-                }
-                System.out.println();
-            }
-            if (ExitTrain){System.out.println("Exit Train on"); break;}
-        }
-        System.out.print(ConsoleColors.PURPLE_BOLD_BRIGHT);
-        System.out.println(Arrays.toString(TotalNumberCount));
-        System.out.print(ConsoleColors.RESET);*/
     }
-    static void Shuffle(List<String> array) {
-        int n = array.size();
-        Random random = new Random();
-        for (int i = 0; i < array.size(); i++) {
-            int randomValue = i + random.nextInt(n - i);
-            String randomElement = array.get(randomValue); //[randomValue];
-            array.set(randomValue,array.get(i));
-            array.set(i,randomElement);
-        }
-    }
-    public static void readCSV(int LineNum, JFrame myFrame, ColorPanel P, boolean Train) throws FileNotFoundException, InterruptedException {
-        String Line;
-        if (Train)
-            Line = TrainLines.get(LineNum);
-        else
-            Line = TestLines.get(LineNum);
-        int Num = 1;
-        for (int i = 0; i < P.DrawBoxes.length; i++) { //  P.DrawBoxes.length
-            for (int j = 0; j < P.DrawBoxes.length; j++) { // P.DrawBoxes[i].length
-                P.DrawBoxes[i][j].ShadeColor = FindElementInLine(Num,Line);
-                Num++;
-            }
-        }
-        myFrame.repaint();
-    }
-    public static void PopulateTestAndTrainArray() throws FileNotFoundException, IOException {
+    // reads the MNIST and auxiliary training and test files and stores them in an array to be used in training.
+    public static void PopulateTestAndTrainArray() throws IOException {
         TrainLines = Files.readAllLines(Paths.get(location + "\\mnist_train.csv"));
         try {
             List<String> TrainLine2 = Files.readAllLines(Paths.get(location + "\\mnist_train_user.csv"));
-            for (int i  = 0; i < TrainLine2.size(); i++) {
-                TrainLines.add(TrainLine2.get(i));
-            }
+            TrainLines.addAll(TrainLine2);
         }catch (Exception e) {
+            System.out.println("auxiliary training file not found");
         }
         TestLines = Files.readAllLines(Paths.get(location + "\\mnist_test.csv"));
         //System.out.println(TestLines.size());
         try {
             List<String> TestLine2 = Files.readAllLines(Paths.get(location + "\\mnist_test_user.csv"));
-            for (int i  = 0; i < TestLine2.size(); i++) {
-                TestLines.add(TestLine2.get(i));
-            }
+            TestLines.addAll(TestLine2);
         }catch (Exception e) {
+            System.out.println("auxiliary testing file not found");
         }
     }
-    public static double[] GetCSVtoArray(int LineNum, boolean Train) throws FileNotFoundException {
+    // gets the particlar line in the MNIST files and then converts them into a format that can be inputted to the network
+    public static double[] GetCSVtoArray(int LineNum, boolean Train) {
         String Line;
         if (Train)
             Line = TrainLines.get(LineNum);
@@ -542,7 +454,7 @@ public class Driver {
         }
         return  Return;
     }
-
+    // gets the label, also known as the expected digit, of a particular line in the MNIST data set
     public static int GetLabel(int LineNum, boolean Train) {
         String Line;
         if (Train)
@@ -551,21 +463,8 @@ public class Driver {
             Line = TestLines.get(LineNum);
         return Integer.parseInt(Line.substring(0, Line.indexOf(",")));
     }
-    public static int[] RandomIndexes(int UpperBound, int LowerBound, int Size){
-        int[] Indexes = new int[Size];
-        for (int i= 0; i < Indexes.length; i++){
-            Indexes[i] = -1;
-        }
-        for (int i = 0; i < Indexes.length; i++){
-            int n = (int)(Math.random() * (UpperBound-LowerBound)+LowerBound);
-            while (NumberExists(Indexes,n)){
-                n = (int)(Math.random() * (UpperBound-LowerBound)+LowerBound);
-            }
-            Indexes[i] = n;
-        }
-        return Indexes;
-    }
-    public static void RandomIndexes(int UpperBound, int LowerBound, int Size, int[] EpochLabel, double[][] Epoch) throws FileNotFoundException{
+    // randomly fills the array with non repeating training scenarios
+    public static void RandomIndexes(int UpperBound, int LowerBound, int Size, int[] EpochLabel, double[][] Epoch) {
         int[] Indexes = new int[Size];
         for (int i= 0; i < Indexes.length; i++){
             Indexes[i] = -1;
