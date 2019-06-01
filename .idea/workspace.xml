@@ -3,15 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="14070ef2-bd06-4afb-a036-fd73dca0f768" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Block.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ColorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ColorPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ConsoleColors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ConsoleColors.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DisplayNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DisplayNetwork.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Line.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Line.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NeuralNetDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NeuralNetDisplay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NeuralNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NeuralNetwork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,9 +17,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+            <state relative-caret-position="22">
+              <caret line="34" column="26" lean-forward="true" selection-start-line="34" selection-start-column="26" selection-end-line="34" selection-end-column="26" />
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="method#Initializations#0;class#Driver#0" />
                 <element signature="method#AddListenersToButtons#0;class#Driver#0" />
                 <element signature="e#3650#3651#0" expanded="true" />
@@ -171,7 +164,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1559347877433" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1559414924499" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -236,11 +229,19 @@
       <option name="project" value="LOCAL" />
       <updated>1559188696251</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Comments written and unnecessary system outs removed.">
+      <created>1559348236648</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1559348236648</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19545455" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -258,7 +259,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.55151516" side_tool="true" weight="0.81510013" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="9" sideWeight="0.47575757" visible="true" weight="0.5146379" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="9" sideWeight="0.47575757" visible="true" weight="0.05392912" />
       <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49924242" weight="0.049261082" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -341,7 +342,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="//First Test for Intellij" />
     <MESSAGE value="Display Network Working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Display Network Working" />
+    <MESSAGE value="Comments written and unnecessary system outs removed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Comments written and unnecessary system outs removed." />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -521,9 +523,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Driver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        <state relative-caret-position="22">
+          <caret line="34" column="26" lean-forward="true" selection-start-line="34" selection-start-column="26" selection-end-line="34" selection-end-column="26" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="method#Initializations#0;class#Driver#0" />
             <element signature="method#AddListenersToButtons#0;class#Driver#0" />
             <element signature="e#3650#3651#0" expanded="true" />

@@ -25,7 +25,7 @@ import java.util.List;
 import java.nio.file.Files;
 
 // class description
-// this is the Main Driver, the place where all the magic happens.
+// this is the Main Driver.
 public class Driver {
     private static int Action;
     private static boolean ExitTrain;
