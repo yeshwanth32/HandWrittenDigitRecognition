@@ -15,6 +15,8 @@ public class Line {
         y1 = Y1;
         y2 = Y2;
         ShadeColor = shade;
+
+        // Testing push
     }
     public void DrawLine(Graphics g){
         if ((ShadeColor > 50 || ShadeColor < -50)){
